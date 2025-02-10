@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Update Movie - MovieWeb App</title>
+    <link rel="stylesheet" href="/static/movies_style.css" />
+  </head>
+  <body>
+    <div class="title-container">
+      <h1>Update Movie Details</h1>
+    </div>
+
+    <div class="form-container">
+      <form
+        action="{{ url_for('update_movie', user_id=relationship.user_id, movie_id=relationship.movie_id) }}"
+        method="POST"
+        class="styled-form"
+      >
+        <label for="title" class="form-label">Movie Title:</label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          class="form-input"
+          value="{{ movie.title }}"
+          required
+        />
+
+        <label for="director" class="form-label">Director:</label>
+        <input
+          type="text"
+          id="director"
+          name="director"
+          class="form-input"
+          value="{{ movie.director }}"
+          required
+        />
+
+        <label for="year" class="form-label">Year:</label>
+        <input
+          type="text"
+          id="year"
+          name="year"
+          class="form-input"
+          value="{{ movie.year }}"
+          required
+        />
+
+        <label for="rating" class="form-label">Rating:</label>
+        <input
+          type="text"
+          id="rating"
+          name="rating"
+          class="form-input"
+          value="{{ movie.rating }}"
+          required
+        />
+
+        <label for="notes" class="form-label">Notes:</label>
+        <textarea
+          id="notes"
+          name="notes"
+          class="form-input"
+        >{{ relationship.notes }}</textarea>
+
+        <button type="submit" class="primary-button">Update Movie</button>
+      </form>
+    </div>
+
+    <div class="button-container">
+      <a href="{{ url_for('show_movie', user_id=relationship.user_id, movie_id=relationship.movie_id) }}">
+        <button class="back-button">Back to Movie</button>
+      </a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Users - MovieWeb App</title>
+    <link rel="stylesheet" href="/static/movies_style.css" />
+  </head>
+  <body>
+    <div class="title-container">
+      <h1>Users</h1>
+    </div>
+
+    <div class="grid user-grid">
+      {% for user in users %}
+        <div class="grid-item user-item">
+          <a href="{{ url_for('user_profile', user_id=user.id) }}">
+            <img
+              class="grid-poster user-poster"
+              src="https://api-private.atlassian.com/users/36b4cd029d4601b1c09851f16d81c3a5/avatar"
+              alt="{{ user.name }}'s Avatar"
+            />
+          </a>
+          <div class="user-info">
+            <p class="user-name">{{ user.name }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="button-container">
+      <a href="/add_user">
+        <button class="primary-button">Add User</button>
+      </a>
+      <a href="/">
+        <button class="back-button">Back Home</button>
+      </a>
+    </div>
+  </body>
+</html>

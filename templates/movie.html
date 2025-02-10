@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ movie.title }} - MovieWeb App</title>
+    <link rel="stylesheet" href="/static/movies_style.css" />
+  </head>
+  <body>
+    <div class="title-container">
+      <h1>{{ movie.title }}</h1>
+    </div>
+
+    <div class="movie-details-container">
+      <div class="movie-poster-container">
+        <img
+          class="movie-poster"
+          src="{{ movie.poster }}"
+          alt="{{ movie.title }} Poster"
+        />
+      </div>
+      <div class="movie-info">
+        <p class="movie-title">Title: <span>{{ movie.title }}</span></p>
+        <p class="movie-year">Year: <span>{{ movie.year }}</span></p>
+        <p class="movie-rating">Rating: <span>{{ movie.rating }}</span></p>
+        <p class="movie-director">Director: <span>{{ movie.director }}</span></p>
+        <p class="movie-notes">Notes: <span>{{ relationship.notes }}</span></p>
+      </div>
+    </div>
+
+    <div class="button-container">
+      <a href="{{ url_for('update_movie', user_id=relationship.user_id, movie_id=relationship.movie_id) }}">
+        <button class="primary-button">Update Movie</button>
+      </a>
+      <a href="{{ url_for('delete_movie', user_id=relationship.user_id, movie_id=relationship.movie_id) }}"
+         onclick="return confirm('Are you sure you want to delete this movie?')">
+        <button class="delete-button">Delete Movie</button>
+      </a>
+      <a href="{{ url_for('user_profile', user_id=relationship.user_id) }}">
+        <button class="back-button">Back to User</button>
+      </a>
+    </div>
+  </body>
+</html>

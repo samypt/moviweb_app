@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movies - MovieWeb App</title>
+    <link rel="stylesheet" href="/static/movies_style.css" />
+  </head>
+  <body>
+    <div class="title-container">
+      <h1>Movies</h1>
+    </div>
+
+    <div class="grid movie-grid">
+      {% for movie in movies %}
+        <div class="grid-item movie-item">
+          <a href="{{ url_for('show_movie', user_id=user_id, movie_id=movie.id) }}">
+            <img
+              class="grid-poster movie-poster"
+              src="{{ movie.poster }}"
+              alt="{{ movie.title }} Poster"
+            />
+          </a>
+          <div class="movie-info">
+            <div class="movie-title">{{ movie.title }}</div>
+            <div class="movie-year">{{ movie.year }}</div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="button-container">
+      <a href="{{ url_for('add_movie', user_id=user_id) }}">
+        <button class="primary-button">Add Movie</button>
+      </a>
+      <a href="{{ url_for('list_users')}}">
+        <button class="back-button">Back to Users </button>
+      </a>
+    </div>
+  </body>
+</html>
