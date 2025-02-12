@@ -124,14 +124,14 @@ class SQLiteDataManager(DataManagerInterface):
 
         try:
             # Add the user to the database
-            db.session.add(user)
-            db.session.commit()
+            self.db.session.add(user)
+            self.db.session.commit()
 
             print('A new user has been successfully added to the database')
             return True
 
         except Exception as e:
-            db.session.rollback()  # Rollback on error
+            self.db.session.rollback()  # Rollback on error
             print(f"Error: {e}")
             return False
 
@@ -144,14 +144,14 @@ class SQLiteDataManager(DataManagerInterface):
 
         try:
             # Add the movie to the database
-            db.session.add(movie)
-            db.session.commit()
+            self.db.session.add(movie)
+            self.db.session.commit()
 
             print("A new movie has been successfully added to the database")
             return True
 
         except Exception as e:
-            db.session.rollback()  # Rollback on error
+            self.db.session.rollback()  # Rollback on error
             print(f"Database insertion error: {e}")
             return False
 
@@ -174,15 +174,15 @@ class SQLiteDataManager(DataManagerInterface):
                 return False
 
             # Update the movie
-            db.session.delete(old_movie)
-            db.session.add(movie)
-            db.session.commit()
+            self.db.session.delete(old_movie)
+            self.db.session.add(movie)
+            self.db.session.commit()
 
             print("The movie has been successfully updated in the database")
             return True
 
         except Exception as e:
-            db.session.rollback()  # Rollback on error
+            self.db.session.rollback()  # Rollback on error
             print(f"Database update error: {e}")
             return False
 
@@ -228,14 +228,14 @@ class SQLiteDataManager(DataManagerInterface):
                 return False
 
             # Delete the movie
-            db.session.delete(movie)
-            db.session.commit()
+            self.db.session.delete(movie)
+            self.db.session.commit()
 
             print(f"Movie with ID {movie_id} has been successfully deleted from the database")
             return True
 
         except Exception as e:
-            db.session.rollback()  # Rollback on error
+            self.db.session.rollback()  # Rollback on error
             print(f"Database deletion error: {e}")
             return False
 
@@ -268,7 +268,7 @@ class SQLiteDataManager(DataManagerInterface):
             return True
 
         except Exception as e:
-            db.session.rollback()  # Rollback on error
+            self.db.session.rollback()  # Rollback on error
             print(f"Database deletion error: {e}")
             return False
 

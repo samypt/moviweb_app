@@ -8,7 +8,7 @@ It integrates with an SQLite database for persistence and the OMDB API for fetch
 
 import omdbapi
 import os
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, abort
 from datamanager.sqlite_data_manager import SQLiteDataManager, User, Movie, UserMovieLibrary
 
 # Define paths for database setup
@@ -71,12 +71,14 @@ def user_profile(user_id):
     Returns:
         Rendered HTML template displaying the user's movies.
     """
+    check_user_exist(user_id)
     try:
         movies = data_manager.get_user_movies(user_id)
     except Exception as e:
         app.logger.error(f"Error fetching users: {e}")
         movies = []
-    return render_template('user_movies.html', movies=movies, user_id=user_id)
+    return render_template('user_movies.html',
+                           movies=movies, user_id=user_id)
 
 
 @app.route('/add_user', methods=['GET', 'POST'])
@@ -121,13 +123,16 @@ def add_movie(user_id):
     Returns:
         Redirect to the user's movie list on success or re-render form on failure.
     """
+    check_user_exist(user_id)
+
     if request.method == "POST":
         movie_title = request.form.get('title')
         try:
             omdb_movie = omdbapi.get_movie_info(movie_title)
             if not omdb_movie:
                 app.logger.error("No movie found or an error occurred", "error")
-                return render_template('add_movie.html', user_id=user_id, movies=data_manager.get_user_movies(user_id))
+                return render_template('add_movie.html',
+                                       user_id=user_id, movies=data_manager.get_user_movies(user_id))
 
             movie = Movie(
                 title=omdb_movie['title'],
@@ -143,9 +148,11 @@ def add_movie(user_id):
 
         except Exception as e:
             app.logger.error(f"Error adding movie for user {user_id}: {e}")
-        return render_template('notification.html', msg='Movie successfully added', user_id=user_id)
+        return render_template('notification.html',
+                               msg='Movie successfully added', user_id=user_id)
 
-    return render_template("add_movie.html", movies=data_manager.get_user_movies(user_id), user_id=user_id)
+    return render_template("add_movie.html",
+                           movies=data_manager.get_user_movies(user_id), user_id=user_id)
 
 
 @app.route("/users/<int:user_id>/movie/<int:movie_id>", methods=['GET'])
@@ -160,6 +167,9 @@ def show_movie(user_id, movie_id):
     Returns:
         Rendered HTML template displaying movie details.
     """
+    check_user_exist(user_id)
+    check_movie_in_user_library(user_id, movie_id)
+
     movie = data_manager.get_movie_by_id(movie_id)
     if not movie:
         app.logger.info("Movie not found", "error")
@@ -189,6 +199,9 @@ def update_movie(user_id, movie_id):
     Returns:
         Rendered notification on success or redirect to the user's movies.
     """
+    check_user_exist(user_id)
+    check_movie_in_user_library(user_id, movie_id)
+
     relationship = data_manager.get_user_movie_relationship(user_id, movie_id)
     movie = data_manager.get_movie_by_id(movie_id)
 
@@ -201,7 +214,8 @@ def update_movie(user_id, movie_id):
         return redirect(f"/users/{user_id}")
 
     if request.method == "GET":
-        return render_template('update_movie.html', relationship=relationship, movie=movie)
+        return render_template('update_movie.html',
+                               relationship=relationship, movie=movie)
 
     # Update movie details
     movie.title = request.form.get('title')
@@ -216,7 +230,8 @@ def update_movie(user_id, movie_id):
 
     flash("Movie successfully updated", "success")
     app.logger.info(f"User {user_id} updated movie {movie_id}")
-    return render_template('notification.html', msg='Movie successfully updated', user_id=user_id)
+    return render_template('notification.html',
+                           msg='Movie successfully updated', user_id=user_id)
 
 
 @app.route("/users/<int:user_id>/delete_movie/<int:movie_id>", methods=['GET'])
@@ -231,6 +246,9 @@ def delete_movie(user_id, movie_id):
     Returns:
         Rendered notification on success or redirect to the user's movies.
     """
+    check_user_exist(user_id)
+    check_movie_in_user_library(user_id, movie_id)
+
     relationship = data_manager.get_user_movie_relationship(user_id, movie_id)
     if not relationship:
         flash("Movie not found in user's library", "error")
@@ -240,7 +258,47 @@ def delete_movie(user_id, movie_id):
 
     flash("Movie successfully deleted", "success")
     app.logger.info(f"Movie {movie_id} removed from user {user_id}'s library")
-    return render_template('notification.html', msg='Movie successfully deleted', user_id=user_id)
+    return render_template('notification.html',
+                           msg='Movie successfully deleted', user_id=user_id)
+
+
+def check_user_exist(user_id):
+    """
+    Checks if a user exists by their user ID.
+
+    Args:
+        user_id (int): The ID of the user to check.
+
+    Returns:
+        User: The user object if found.
+
+    Raises:
+        404 Not Found: If no user is found with the given ID.
+    """
+    user = data_manager.get_user_by_id(user_id)
+    if not user:
+        abort(404)  # This will trigger the 404 error handler
+    return True
+
+
+def check_movie_in_user_library(user_id, movie_id):
+    """
+    Checks if a movie is present in a user's library.
+
+    Args:
+        user_id (int): The ID of the user.
+        movie_id (int): The ID of the movie to check.
+
+    Returns:
+        UserMovieLibrary: The relationship object if found.
+
+    Raises:
+        404 Not Found: If the movie is not found in the user's library.
+    """
+    relationship = data_manager.get_user_movie_relationship(user_id, movie_id)
+    if not relationship:
+        abort(404)  # This will trigger the 404 error handler
+    return True
 
 
 # Handle 404 Not Found
@@ -322,6 +380,10 @@ def handle_exception(e):
     app.logger.error(f"Unhandled Exception: {e}")
     return render_template('error.html', error=str(e)), 500
 
+
+@app.route('/test-404')
+def test_404():
+    return render_template('404.html'), 404
 
 if __name__ == '__main__':
     app.run(port=5001, debug=True)
