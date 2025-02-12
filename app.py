@@ -9,6 +9,7 @@ It integrates with an SQLite database for persistence and the OMDB API for fetch
 import omdbapi
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash, abort
+# from .api import api  # Importing the API blueprint
 from datamanager.sqlite_data_manager import SQLiteDataManager, User, Movie, UserMovieLibrary
 
 # Define paths for database setup
@@ -19,6 +20,7 @@ DB_PATH = os.path.join(MAIN_FOLDER_PATH, DB_PATH, DB_NAME)
 
 # Initialize Flask app
 app = Flask(__name__)
+# app.register_blueprint(api, url_prefix='/api')  # Registering the blueprint
 data_manager = SQLiteDataManager(DB_PATH)  # Use the appropriate path to your Database
 
 # Secret key for session management and flash messages
@@ -381,9 +383,7 @@ def handle_exception(e):
     return render_template('error.html', error=str(e)), 500
 
 
-@app.route('/test-404')
-def test_404():
-    return render_template('404.html'), 404
+
 
 if __name__ == '__main__':
     app.run(port=5001, debug=True)
