@@ -243,5 +243,85 @@ def delete_movie(user_id, movie_id):
     return render_template('notification.html', msg='Movie successfully deleted', user_id=user_id)
 
 
+# Handle 404 Not Found
+@app.errorhandler(404)
+def page_not_found(e):
+    """
+    Handle 404 errors (Page Not Found).
+
+    Args:
+        e (Exception): The exception object.
+
+    Returns:
+        Rendered HTML template for 404 error and status code 404.
+    """
+    app.logger.error(f"404 Error: {e}")
+    return render_template('404.html'), 404
+
+
+# Handle 500 Internal Server Error
+@app.errorhandler(500)
+def internal_server_error(e):
+    """
+    Handle 500 errors (Internal Server Error).
+
+    Args:
+        e (Exception): The exception object.
+
+    Returns:
+        Rendered HTML template for 500 error and status code 500.
+    """
+    app.logger.error(f"500 Error: {e}")
+    return render_template('500.html'), 500
+
+
+# Handle 403 Forbidden
+@app.errorhandler(403)
+def forbidden(e):
+    """
+    Handle 403 errors (Forbidden Access).
+
+    Args:
+        e (Exception): The exception object.
+
+    Returns:
+        Rendered HTML template for 403 error and status code 403.
+    """
+    app.logger.error(f"403 Error: {e}")
+    return render_template('403.html'), 403
+
+
+# Handle 400 Bad Request
+@app.errorhandler(400)
+def bad_request(e):
+    """
+    Handle 400 errors (Bad Request).
+
+    Args:
+        e (Exception): The exception object.
+
+    Returns:
+        Rendered HTML template for 400 error and status code 400.
+    """
+    app.logger.error(f"400 Error: {e}")
+    return render_template('400.html'), 400
+
+
+# Handle Generic Exceptions (Optional)
+@app.errorhandler(Exception)
+def handle_exception(e):
+    """
+    Handle any uncaught exceptions.
+
+    Args:
+        e (Exception): The exception object.
+
+    Returns:
+        Rendered HTML template for a general error and status code 500.
+    """
+    app.logger.error(f"Unhandled Exception: {e}")
+    return render_template('error.html', error=str(e)), 500
+
+
 if __name__ == '__main__':
     app.run(port=5001, debug=True)

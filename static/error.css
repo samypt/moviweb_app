@@ -1,0 +1,54 @@
+/* General body styling for error pages */
+body {
+  background: #F5F5F0;
+  color: black;
+  font-family: Monaco, monospace;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Error container styling */
+.error-container {
+  background: #ffffff;
+  padding: 30px;
+  width: 400px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Error heading */
+.error-container h1 {
+  color: #009B50;
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+/* Error message */
+.error-container p {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Back home button styling */
+.error-container a button {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #009B50;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.error-container a button:hover {
+  background: #007A3D;
+}

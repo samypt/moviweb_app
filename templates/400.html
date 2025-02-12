@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bad Request</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='error.css') }}">
+</head>
+<body>
+    <div class="error-container">
+        <h1>400 - Bad Request</h1>
+        <p>The server could not understand your request.</p>
+        <a href="{{ url_for('home') }}"><button type="button">Go Back Home</button></a>
+    </div>
+</body>
+</html>
