@@ -7,7 +7,7 @@ api = Blueprint('api', __name__)
 @api.route('/users', methods=['GET'])
 def get_users():
     # Implementation here
-    return jsonify({'message': 'Hello, world!'})
+    return jsonify({'message': 'Test message'})
 
 
 
