@@ -14,13 +14,12 @@ class User(db.Model):
 
     movies = db.relationship('UserMovieLibrary', backref='user', lazy=True)
 
-    # favorite_movies = db.relationship(
-    #     'Movie',
-    #     secondary='user_movie_library',
-    #     primaryjoin="and_(User.id == User_Movie_Library.user_id, User_Movie_Library.is_favorite == True)",
-    #     secondaryjoin="Movie.id == User_Movie_Library.movie_id",
-    #     viewonly=True,
-    # )
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            # "email": self.email
+        }
 
     def __str__(self):
         return f"User: {self.name} (ID: {self.id})"
@@ -42,6 +41,15 @@ class Movie(db.Model):
     poster = db.Column(db.String, nullable=True)
 
     users = db.relationship('UserMovieLibrary', backref='movie', lazy=True)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "director": self.director,
+            "year": self.year,
+            "rating": self.rating,
+        }
 
     def __str__(self):
         return f"Movie: {self.title} (ID: {self.id}, Director: {self.director}, Year: {self.year})"
