@@ -7,33 +7,12 @@ It integrates with an SQLite database for persistence and the OMDB API for fetch
 """
 
 import omdbapi
-import os
-from flask import Flask, render_template, request, redirect, url_for, flash, abort
-# from .api import api  # Importing the API blueprint
-from datamanager.sqlite_data_manager import SQLiteDataManager, User, Movie, UserMovieLibrary
+from flask import render_template, request, redirect, url_for, flash, abort
+from app_setup import app, data_manager
+from api import api  # Importing the API blueprint
+from datamanager.sqlite_data_manager import User, Movie, UserMovieLibrary
 
-# Define paths for database setup
-MAIN_FOLDER_PATH = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = "./data"
-DB_NAME = "moviwebapp.sqlite"
-DB_PATH = os.path.join(MAIN_FOLDER_PATH, DB_PATH, DB_NAME)
-
-# Initialize Flask app
-app = Flask(__name__)
-# app.register_blueprint(api, url_prefix='/api')  # Registering the blueprint
-data_manager = SQLiteDataManager(DB_PATH)  # Use the appropriate path to your Database
-
-# Secret key for session management and flash messages
-app.secret_key = 'your_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{DB_PATH}"
-data_manager.db.init_app(app)
-
-# Create database if it doesn't exist
-if not os.path.exists(DB_PATH):
-    with app.app_context():
-        data_manager.db.create_all()
-        print("New DB Created")
-
+app.register_blueprint(api, url_prefix='/api')  # Registering the blueprint
 
 @app.route('/')
 def home():

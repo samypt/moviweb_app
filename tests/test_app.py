@@ -1,5 +1,5 @@
 import pytest
-from ...MovieWeb_App.app import app
+from ..app import app
 from unittest.mock import patch
 
 # Use pytest's fixture for setting up the test client
