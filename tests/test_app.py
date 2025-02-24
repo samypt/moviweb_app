@@ -1,5 +1,5 @@
 import pytest
-from ..app import app
+from ..app_setup import app
 from unittest.mock import patch
 
 # Use pytest's fixture for setting up the test client
